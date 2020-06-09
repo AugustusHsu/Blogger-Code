@@ -1,0 +1,14 @@
+# 忽略一些圖片
+3d/batch_hard/*.png
+!3d/batch_hard/000.png
+3d/semi_hard/*.png
+!3d/semi_hard/000.png
+
+output/batch_hard/*.png
+!output/batch_hard/000.png
+output/semi_hard/*.png
+!output/semi_hard/000.png
+
+# 忽略model的存榜
+models/batch_hard/*
+models/semi_hard/*
