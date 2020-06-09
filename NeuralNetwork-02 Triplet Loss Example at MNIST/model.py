@@ -23,7 +23,6 @@ class Triplet_Net(Model):
             layers.Flatten(),
             tf.keras.layers.Dense(200)])
         self.l2_norm = layers.Lambda(lambda x: tf.math.l2_normalize(x, axis=1))
-            # layers.Lambda(lambda x: tf.math.l2_normalize(x, axis=1))])
     def call(self, img, training=True):
         vec = self.emb_layer(img)
         vec = self.l2_norm(vec)

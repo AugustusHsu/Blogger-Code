@@ -26,7 +26,6 @@ pd.options.mode.chained_assignment = None
 -----------------------Data Set-----------------------
 '''
 [(train_x, train_y), (test_x, test_y)] = load_data('mnist.npz')
-# test_x, test_y = test_x[:500], test_y[:500]
 test_x = test_x.reshape(test_x.shape[0], 28, 28, 1).astype('float32')
 test_x = (test_x - 127.5) / 127.5
 
@@ -39,9 +38,8 @@ train_dataset = train_dataset.batch(opts.BATCH_SIZE).take(20)
 '''
 -----------------------Network Setting-----------------------
 '''
-# method = 'batch_all'
-method = 'batch_hard'
-# method = 'semi_hard'
+# method = 'batch_hard'
+method = 'semi_hard'
 
 triplet_net = Triplet_Net()
 TripletLoss = tfa.losses.TripletSemiHardLoss(margin=opts.margin)
