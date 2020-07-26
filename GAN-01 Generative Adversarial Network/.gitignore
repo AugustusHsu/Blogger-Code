@@ -4,3 +4,4 @@ output/*
 
 # 忽略model的存擋
 models/*
+!models/.gitkeep
