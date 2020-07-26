@@ -7,7 +7,7 @@
 
 ## Generative Adversarial Network系列
 
-- [ ] [Generative Adversarial Network](http://papers.nips.cc/paper/5423-generative-adversarial-nets)
+- [x] [Generative Adversarial Network](http://papers.nips.cc/paper/5423-generative-adversarial-nets)
 - [ ] [Conditional Generative Adversarial Nets](https://arxiv.org/abs/1411.1784)
 - [ ] [Deep Convolutional Generative Adversarial Network](https://arxiv.org/abs/1511.06434)
 - [ ] WGAN
