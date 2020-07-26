@@ -9,6 +9,6 @@ output/batch_hard/*.png
 output/semi_hard/*.png
 !output/semi_hard/000.png
 
-# 忽略model的存榜
+# 忽略model的存擋
 models/batch_hard/*
 models/semi_hard/*
