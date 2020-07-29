@@ -43,8 +43,10 @@ train_dataset = train_dataset.batch(opts.BATCH_SIZE).take(20)
 method = 'semi_hard'
 
 triplet_net = Triplet_Net()
-# TripletLoss = tfa.losses.TripletHardLoss(margin=opts.margin)
-TripletLoss = tfa.losses.TripletSemiHardLoss(margin=opts.margin)
+if method == 'batch_hard':
+    TripletLoss = tfa.losses.TripletHardLoss(margin=opts.margin)
+if method == 'semi_hard':
+    TripletLoss = tfa.losses.TripletSemiHardLoss(margin=opts.margin)
 optimizer = tf.keras.optimizers.Adam(opts.lr, opts.beta)
 '''
 -----------------------Initial Log File-----------------------
