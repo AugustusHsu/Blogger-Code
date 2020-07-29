@@ -14,6 +14,7 @@ from model import Dis_Net, Gen_Net
 from utils import generator_loss
 from utils import discriminator_loss
 from utils import generate_and_save_images
+from utils import plot_GIF
 
 from tqdm import tqdm
 from args import parser
@@ -125,7 +126,7 @@ def train(train_dataset):
     #                          noise)
 
 train(train_dataset)
-
+plot_GIF()
 
 
 

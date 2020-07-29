@@ -6,6 +6,7 @@ Created on Wed May 13 16:08:31 2020
 """
 
 import os
+import imageio
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from args import parser
@@ -43,7 +44,13 @@ def generate_and_save_images(Generator, epoch, test_input):
     plt.savefig(path)
     plt.close(fig)
 
-
+def plot_GIF(anim_file = 'gan.gif'):
+    images = []
+    img_path = os.path.join(opts.PLOT_PATH)
+    for epoch in range(opts.epochs):
+        img = imageio.imread(os.path.join(img_path, '{:03d}.png'.format(epoch+1)))
+        images.append(img)
+    imageio.mimsave(anim_file, images)
 
 
 
