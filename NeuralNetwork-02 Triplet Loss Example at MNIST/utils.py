@@ -6,6 +6,7 @@ Created on Wed May 13 16:08:31 2020
 """
 
 import os
+import imageio
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
@@ -97,6 +98,28 @@ def generate_and_save_3d_images(triplet_net, test_x, test_y, view, method):
     path = os.path.join(fig_path, '{:03d}.png'.format(view))
     plt.savefig(path)
     plt.close('all')
+
+def plot2dgif(method):
+    images = []
+    img_path = os.path.join(opts.PLOT_PATH, method)
+    for epoch in range(opts.epochs+1):
+        img = imageio.imread(os.path.join(img_path, '{:03d}.png'.format(epoch)))
+        images.append(img)
+    
+    anim_file = method + '_2d.gif'
+    path = os.path.join(opts.GIF_PATH, anim_file)
+    imageio.mimsave(path, images)
+
+def plot3dgif(method):
+    images = []
+    img_path = os.path.join(opts.PLOT_3D_PATH, method)
+    for view in range(0, 360, 3):
+        img = imageio.imread(os.path.join(img_path, '{:03d}.png'.format(view)))
+        images.append(img)
+    
+    anim_file = method + '_3d.gif'
+    path = os.path.join(opts.GIF_PATH, anim_file)
+    imageio.mimsave(path, images)
 
 
 

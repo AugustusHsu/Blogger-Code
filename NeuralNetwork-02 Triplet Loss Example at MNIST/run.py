@@ -16,6 +16,7 @@ from model import Triplet_Net
 from utils import generate_and_save_images
 from utils import plot_line
 from utils import generate_and_save_3d_images
+from utils import plot2dgif, plot3dgif
 
 from tqdm import tqdm
 from args import parser
@@ -42,8 +43,8 @@ train_dataset = train_dataset.batch(opts.BATCH_SIZE).take(20)
 method = 'semi_hard'
 
 triplet_net = Triplet_Net()
-TripletLoss = tfa.losses.TripletSemiHardLoss(margin=opts.margin)
 # TripletLoss = tfa.losses.TripletHardLoss(margin=opts.margin)
+TripletLoss = tfa.losses.TripletSemiHardLoss(margin=opts.margin)
 optimizer = tf.keras.optimizers.Adam(opts.lr, opts.beta)
 '''
 -----------------------Initial Log File-----------------------
@@ -136,8 +137,6 @@ plot_line(df, 'triplet_loss', method)
 
 for view in range(0, 360, 3):
     generate_and_save_3d_images(triplet_net, test_x, test_y, view, method)
-
-from GIF import plot2dgif, plot3dgif
 
 plot2dgif(method)
 plot3dgif(method)
