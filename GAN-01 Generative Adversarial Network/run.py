@@ -2,19 +2,19 @@
 """
 Created on Wed May 13 16:00:16 2020
 
-@author: jimhs
+@author: jim
 """
 import os
 import time
-import numpy as np
+import pandas as pd
 import tensorflow as tf
-from tensorflow.keras import Model, layers
 from tensorflow.keras.datasets.mnist import load_data
 from model import Dis_Net, Gen_Net
 from utils import generator_loss
 from utils import discriminator_loss
 from utils import generate_and_save_images
 from utils import plot_GIF
+from utils import plot_line
 
 from tqdm import tqdm
 from args import parser
@@ -118,16 +118,16 @@ def train(train_dataset):
         
         print ('Time for epoch {} is {:.3f} sec'.format(epoch + 1, time.time()-start))
         time.sleep(0.2)
-    
-    # Generate after the final epoch
-    # display.clear_output(wait=True)
-    # generate_and_save_images(Generator,
-    #                          epochs,
-    #                          noise)
 
 train(train_dataset)
 plot_GIF()
 
+csv_path = os.path.join(opts.LOG_PATH, '{}.csv'.format('loss'))
+df = pd.read_csv(csv_path)
+col_name = ['Real_P', 'Fake_P']
+plot_line(df, col_name, 'gan', figname='probability')
+col_name = ['Gen_loss', 'Dis_loss']
+plot_line(df, col_name, 'gan', figname='loss')
 
 
 

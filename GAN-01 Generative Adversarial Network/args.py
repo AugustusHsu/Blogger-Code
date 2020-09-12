@@ -2,7 +2,7 @@
 """
 Created on Wed May 13 15:20:14 2020
 
-@author: jimhs
+@author: jim
 """
 
 class parser(object):
@@ -14,6 +14,7 @@ class parser(object):
         self.LOG_PATH = 'logs/'
         self.MODEL_PATH = 'models/'
         self.PLOT_PATH = 'output/'
+        self.PLOT_LINE_PATH = 'line/'
         '''
         -----------------------Setting-----------------------
         '''

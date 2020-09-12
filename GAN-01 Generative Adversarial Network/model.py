@@ -2,7 +2,7 @@
 """
 Created on Wed May 13 14:57:25 2020
 
-@author: jimhs
+@author: jim
 """
 
 import tensorflow as tf
@@ -20,6 +20,7 @@ class Dis_Net(Model):
             layers.Dense(1)])
     def call(self, vec):
         output = self.Dense(vec)
+        output = tf.sigmoid(output)
         return output
         
 class Gen_Net(Model):
