@@ -1,9 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May 13 16:00:16 2020
+# -*- encoding: utf-8 -*-
+'''
+@File    :   run.py
+@Time    :   2021/11/30 15:15:23
+@Author  :   AugustusHsu
+@Contact :   jimhsu11@gmail.com
+'''
 
-@author: jim
-"""
 import os
 import time
 import pandas as pd
@@ -15,39 +17,34 @@ from utils import discriminator_loss
 from utils import generate_and_save_images
 from utils import plot_GIF
 from utils import plot_line
-
 from tqdm import tqdm
-from args import parser
+from absl import app
+from absl import flags
+from absl import logging
 
-opts = parser()
-'''
------------------------Data Set-----------------------
-'''
-[(train_x, train_y), (test_x, test_y)] = load_data('mnist.npz')
+FLAGS = flags.FLAGS
+flags.DEFINE_string('LOG_PATH', 'logs/', 
+                    'path to log_dir')
+flags.DEFINE_string('MODEL_PATH', 'models/', 
+                    'path to save the model')
+flags.DEFINE_integer('noise_dim', 100, 'noise dimension')
+flags.DEFINE_integer('BATCH_SIZE', 256, 'batch size')
+flags.DEFINE_float('lr', 2e-4, 'learning rate')
+flags.DEFINE_integer('epochs', 120, 'epoch')
 
-train_images = train_x.reshape(train_x.shape[0], 28, 28, 1).astype('float32')
-train_images = (train_images - 127.5) / 127.5
+def setup_model():
+    Generator = Gen_Net()
+    Discriminator = Dis_Net()
 
-train_dataset = tf.data.Dataset.from_tensor_slices(train_images)
-train_dataset = train_dataset.shuffle(opts.BUFFER_SIZE)
-train_dataset = train_dataset.batch(opts.BATCH_SIZE)
+    G_opt = tf.keras.optimizers.Adam(FLAGS.lr*5, 0.5)
+    D_opt = tf.keras.optimizers.Adam(FLAGS.lr, 0.5)
+    return Generator, Discriminator, G_opt, D_opt
 
-noise = tf.random.normal([opts.num_examples_to_generate, opts.noise_dim])
-'''
------------------------Network Setting-----------------------
-'''
-Generator = Gen_Net()
-Discriminator = Dis_Net()
-
-G_opt = tf.keras.optimizers.Adam(opts.lr, opts.beta_1)
-D_opt = tf.keras.optimizers.Adam(opts.lr, opts.beta_1)
-
-'''
------------------------Each Epoch Training-----------------------
-'''
 @tf.function
-def train_step(images, loss):
-    noise = tf.random.normal([opts.BATCH_SIZE, opts.noise_dim])
+def train_step(models, opts, images, loss):
+    Generator, Discriminator = models
+    G_opt, D_opt = opts
+    noise = tf.random.normal([FLAGS.BATCH_SIZE, FLAGS.noise_dim])
     
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
         generated_images = Generator(noise, training=True)
@@ -68,13 +65,27 @@ def train_step(images, loss):
     
     G_opt.apply_gradients(zip(gradients_of_gen, Generator.trainable_variables))
     D_opt.apply_gradients(zip(gradients_of_dis, Discriminator.trainable_variables))
+
+def main(argv):
+    '''
+    -----------------------Data Set-----------------------
+    '''
+    [(train_x, train_y), (test_x, test_y)] = load_data('mnist.npz')
+
+    train_images = train_x.reshape(train_x.shape[0], 28, 28, 1).astype('float32')
+    train_images = (train_images - 127.5) / 127.5
+
+    train_dataset = tf.data.Dataset.from_tensor_slices(train_images)
+    train_dataset = train_dataset.shuffle(60000)
+    train_dataset = train_dataset.batch(FLAGS.BATCH_SIZE)
+
+    NOISE = tf.random.normal([16, FLAGS.noise_dim])
     
-'''
------------------------Training-----------------------
-'''
-def train(train_dataset):
+    '''
+    -----------------------Training-----------------------
+    '''
     # Initial Log File
-    log_path = os.path.join(opts.LOG_PATH)
+    log_path = os.path.join(FLAGS.LOG_PATH)
     if not os.path.exists(log_path):
         os.mkdir(log_path)
     csv_path = os.path.join(log_path, 'loss.csv')
@@ -87,11 +98,15 @@ def train(train_dataset):
     D_loss = tf.keras.metrics.Mean()
     loss = [dis_r_p, dis_f_p, G_loss, D_loss]
     
+    Generator, Discriminator, G_opt, D_opt = setup_model()
+    models = [Generator, Discriminator]
+    opts = [G_opt, D_opt]
+    
     # Training
-    for epoch in range(opts.epochs):
+    for epoch in range(FLAGS.epochs):
         start = time.time()
         for image_batch in tqdm(train_dataset.as_numpy_iterator()):
-            train_step(image_batch, loss)
+            train_step(models, opts, image_batch, loss)
         
         # Record Loss
         with open(csv_path, 'a') as f:
@@ -107,31 +122,25 @@ def train(train_dataset):
         # Each Epoch Save Image
         generate_and_save_images(Generator,
                                  epoch + 1,
-                                 noise)
+                                 NOISE)
         
         # Save the model every 15 epochs
         if (epoch + 1) % 15 == 0:
-            Gen_save_path = os.path.join(opts.MODEL_PATH, 'Generator')
-            Dis_save_path = os.path.join(opts.MODEL_PATH, 'Discriminator')
+            Gen_save_path = os.path.join(FLAGS.MODEL_PATH, 'Generator')
+            Dis_save_path = os.path.join(FLAGS.MODEL_PATH, 'Discriminator')
             Generator.save_weights(Gen_save_path)
             Discriminator.save_weights(Dis_save_path)
         
-        print ('Time for epoch {} is {:.3f} sec'.format(epoch + 1, time.time()-start))
+        logging.info('Time for epoch {} is {:.3f} sec'.format(epoch + 1, time.time()-start))
         time.sleep(0.2)
+    plot_GIF()
 
-train(train_dataset)
-plot_GIF()
+    csv_path = os.path.join(FLAGS.LOG_PATH, '{}.csv'.format('loss'))
+    df = pd.read_csv(csv_path)
+    col_name = ['Real_P', 'Fake_P']
+    plot_line(df, col_name, 'gan', figname='probability')
+    col_name = ['Gen_loss', 'Dis_loss']
+    plot_line(df, col_name, 'gan', figname='loss')
 
-csv_path = os.path.join(opts.LOG_PATH, '{}.csv'.format('loss'))
-df = pd.read_csv(csv_path)
-col_name = ['Real_P', 'Fake_P']
-plot_line(df, col_name, 'gan', figname='probability')
-col_name = ['Gen_loss', 'Dis_loss']
-plot_line(df, col_name, 'gan', figname='loss')
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    app.run(main)

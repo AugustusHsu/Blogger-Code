@@ -11,9 +11,14 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from args import parser
 
-opts = parser()
+from absl import flags
+from absl.flags import FLAGS
+
+flags.DEFINE_string('PLOT_PATH', 'plot/', 
+                    'path to save the temporary image')
+flags.DEFINE_string('IMG_PATH', 'img/', 
+                    'path to save the final image')
 
 cross_entropy = tf.keras.losses.BinaryCrossentropy()
 
@@ -26,15 +31,13 @@ def discriminator_loss(real_output, fake_output):
     # total_loss = real_loss + fake_loss
     return real_loss, fake_loss
 
-
 def generate_and_save_images(Generator, epoch, test_input):
     # Initial Log File
-    fig_path = os.path.join(opts.PLOT_PATH)
+    fig_path = os.path.join(FLAGS.PLOT_PATH)
     if not os.path.exists(fig_path):
         os.mkdir(fig_path)
         
     predictions = Generator(test_input, training=False)
-    
     fig = plt.figure(figsize=(16,16))
     image = np.uint8(predictions*127.5 + 127.5)
     image = np.squeeze(image)
@@ -47,17 +50,17 @@ def generate_and_save_images(Generator, epoch, test_input):
     plt.savefig(path)
     plt.close(fig)
 
-def plot_GIF(anim_file = 'gan.gif'):
+def plot_GIF(anim_file='gan.gif'):
     images = []
-    img_path = os.path.join(opts.PLOT_PATH)
-    for epoch in range(opts.epochs):
+    img_path = os.path.join(FLAGS.PLOT_PATH)
+    for epoch in range(FLAGS.epochs):
         img = imageio.imread(os.path.join(img_path, '{:03d}.png'.format(epoch+1)))
         images.append(img)
-    imageio.mimsave(anim_file, images)
+    imageio.mimsave(os.path.join(FLAGS.IMG_PATH, anim_file), images)
 
 def plot_line(df, col_name, method, figname):
     # Initial Log File
-    fig_path = os.path.join(opts.PLOT_LINE_PATH)
+    fig_path = os.path.join(FLAGS.IMG_PATH)
     if not os.path.exists(fig_path):
         os.mkdir(fig_path)
         
@@ -68,19 +71,3 @@ def plot_line(df, col_name, method, figname):
     path = os.path.join(fig_path, method + '_' + figname + '.png')
     plt.savefig(path)
     plt.close('all')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
