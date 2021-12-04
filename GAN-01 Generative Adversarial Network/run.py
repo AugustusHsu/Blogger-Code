@@ -44,7 +44,7 @@ def setup_model():
 def train_step(models, opts, images, loss):
     Generator, Discriminator = models
     G_opt, D_opt = opts
-    noise = tf.random.normal([FLAGS.BATCH_SIZE, FLAGS.noise_dim])
+    noise = tf.random.normal([images.shape[0], FLAGS.noise_dim])
     
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
         generated_images = Generator(noise, training=True)
@@ -82,7 +82,7 @@ def main(argv):
     NOISE = tf.random.normal([16, FLAGS.noise_dim])
     
     '''
-    -----------------------Training-----------------------
+    -----------------------Initial-----------------------
     '''
     # Initial Log File
     log_path = os.path.join(FLAGS.LOG_PATH)
@@ -102,7 +102,9 @@ def main(argv):
     models = [Generator, Discriminator]
     opts = [G_opt, D_opt]
     
-    # Training
+    '''
+    -----------------------Training-----------------------
+    '''
     for epoch in range(FLAGS.epochs):
         start = time.time()
         for image_batch in tqdm(train_dataset.as_numpy_iterator()):
@@ -120,7 +122,7 @@ def main(argv):
         loss[2].reset_states()
         loss[3].reset_states()
         # Each Epoch Save Image
-        generate_and_save_images(Generator(NOISE, training=False),epoch + 1)
+        generate_and_save_images(Generator(NOISE, training=False), epoch + 1)
         
         # Save the model every 15 epochs
         if (epoch + 1) % 15 == 0:
