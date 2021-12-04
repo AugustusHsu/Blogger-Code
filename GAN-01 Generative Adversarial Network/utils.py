@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May 13 16:08:31 2020
-
-@author: jim
-"""
+# -*- encoding: utf-8 -*-
+'''
+@File    :   utils.py
+@Time    :   2021/11/30 17:11:16
+@Author  :   AugustusHsu
+@Contact :   jimhsu11@gmail.com
+'''
 
 import os
 import imageio
@@ -31,17 +32,16 @@ def discriminator_loss(real_output, fake_output):
     # total_loss = real_loss + fake_loss
     return real_loss, fake_loss
 
-def generate_and_save_images(Generator, epoch, test_input):
+def generate_and_save_images(pred_img, epoch):
     # Initial Log File
     fig_path = os.path.join(FLAGS.PLOT_PATH)
     if not os.path.exists(fig_path):
         os.mkdir(fig_path)
         
-    predictions = Generator(test_input, training=False)
     fig = plt.figure(figsize=(16,16))
-    image = np.uint8(predictions*127.5 + 127.5)
+    image = np.uint8(pred_img*127.5 + 127.5)
     image = np.squeeze(image)
-    for i in range(predictions.shape[0]):
+    for i in range(pred_img.shape[0]):
         plt.subplot(4, 4, i+1)
         plt.imshow(image[i], cmap='gray')
         plt.axis('off')
@@ -51,6 +51,8 @@ def generate_and_save_images(Generator, epoch, test_input):
     plt.close(fig)
 
 def plot_GIF(anim_file='gan.gif'):
+    if not os.path.exists(FLAGS.IMG_PATH):
+        os.mkdir(FLAGS.IMG_PATH)
     images = []
     img_path = os.path.join(FLAGS.PLOT_PATH)
     for epoch in range(FLAGS.epochs):

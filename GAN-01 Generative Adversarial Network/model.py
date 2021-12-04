@@ -26,7 +26,6 @@ def Dis_Net():
         
 def Gen_Net():
     x = inputs = Input([FLAGS.noise_dim])
-    x = Flatten()(x)
     x = Dense(128, activation='relu')(x)
     x = Dense(256, activation='relu')(x)
     x = Dense(512, activation='relu')(x)

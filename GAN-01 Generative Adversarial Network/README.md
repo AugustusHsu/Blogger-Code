@@ -1,8 +1,8 @@
 # GAN-01 Generative Adversarial Network
 
-簡單透過GAN來生成MNIST的圖片。
+簡單地透過GAN來生成MNIST的圖片。
 
-Blogger Link : **https://augustushsu.github.io/2020/06/25/GAN-01/**
+Blogger Link : **https://augustushsu.github.io/2021/12/03/GAN-01/**
 
 示意圖：
 

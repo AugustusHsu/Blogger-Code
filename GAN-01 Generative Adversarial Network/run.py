@@ -120,9 +120,7 @@ def main(argv):
         loss[2].reset_states()
         loss[3].reset_states()
         # Each Epoch Save Image
-        generate_and_save_images(Generator,
-                                 epoch + 1,
-                                 NOISE)
+        generate_and_save_images(Generator(NOISE, training=False),epoch + 1)
         
         # Save the model every 15 epochs
         if (epoch + 1) % 15 == 0:
