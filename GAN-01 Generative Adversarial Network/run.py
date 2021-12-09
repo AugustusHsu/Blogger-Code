@@ -12,11 +12,9 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow.keras.datasets.mnist import load_data
 from model import Dis_Net, Gen_Net
-from utils import generator_loss
-from utils import discriminator_loss
+from utils import generator_loss, discriminator_loss
 from utils import generate_and_save_images
-from utils import plot_GIF
-from utils import plot_line
+from utils import plot_GIF, plot_line
 from tqdm import tqdm
 from absl import app
 from absl import flags

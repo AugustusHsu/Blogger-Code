@@ -1,0 +1,19 @@
+# 忽略一些圖片
+plot/*
+!plot/001.png
+
+# 忽略model的存擋
+models/*
+!models/.gitkeep
+
+# 忽略img的圖片
+img/*
+!img/.gitkeep
+
+# 忽略logs的資料
+logs/*
+!logs/.gitkeep
+
+# 忽略data
+data/*
+!data/.gitkeep
