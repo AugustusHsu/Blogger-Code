@@ -83,10 +83,9 @@ def main(argv):
     -----------------------Initial-----------------------
     '''
     # Initial Log File
-    log_path = os.path.join(FLAGS.LOG_PATH)
-    if not os.path.exists(log_path):
-        os.mkdir(log_path)
-    csv_path = os.path.join(log_path, 'loss.csv')
+    if not os.path.exists(FLAGS.LOG_PATH):
+        os.mkdir(FLAGS.LOG_PATH)
+    csv_path = os.path.join(FLAGS.LOG_PATH, 'loss.csv')
     with open(csv_path, 'w') as f:
         f.write('epoch,Real_P,Fake_P,Gen_loss,Dis_loss\n')
     format_str = '{:5d},{:.6f},{:.6f},{:.6f},{:.6f}\n'
@@ -133,7 +132,6 @@ def main(argv):
         time.sleep(0.2)
     plot_GIF()
 
-    csv_path = os.path.join(FLAGS.LOG_PATH, '{}.csv'.format('loss'))
     df = pd.read_csv(csv_path)
     col_name = ['Real_P', 'Fake_P']
     plot_line(df, col_name, 'gan', figname='probability')

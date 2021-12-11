@@ -67,17 +67,18 @@ def _get_attr(TFR_data):
     return TFR_data['image/Attr']
 
 @tf.function
-def _your_dataset(tfrecord, size):
+def _my_dataset(tfrecord, size):
     TFR_data = tf.io.parse_single_example(tfrecord, IMAGE_FEATURE_MAP)
     if FLAGS.ImageType == 'img_celeba' and FLAGS.bbox:
         resize_img = _crop_img(TFR_data, size)
     else:
         resize_img = _load_resize_image(TFR_data, size)
-    Landmarks = _get_landmarks(TFR_data)
-    Attr = _get_attr(TFR_data)
-    return resize_img, Landmarks, Attr
+    # Landmarks = _get_landmarks(TFR_data)
+    # Attr = _get_attr(TFR_data)
+    # return resize_img, Landmarks, Attr
+    return resize_img
 
 def LoadTFRecordDataset(TFRecordPath):
     dataset = tf.data.Dataset.list_files(TFRecordPath)
     dataset = dataset.flat_map(tf.data.TFRecordDataset)
-    return dataset.map(lambda x: _your_dataset(x, FLAGS.DisInSize), num_parallel_calls=-1)
+    return dataset.map(lambda x: _my_dataset(x, FLAGS.DisInSize), num_parallel_calls=-1)

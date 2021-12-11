@@ -33,7 +33,7 @@ def discriminator_loss(real_output, fake_output):
     return real_loss, fake_loss
 
 def generate_and_save_images(pred_img, epoch):
-    # Initial Log File
+    # Create folder
     fig_path = os.path.join(FLAGS.PLOT_PATH)
     if not os.path.exists(fig_path):
         os.mkdir(fig_path)
@@ -61,7 +61,7 @@ def plot_GIF(anim_file='gan.gif'):
     imageio.mimsave(os.path.join(FLAGS.IMG_PATH, anim_file), images)
 
 def plot_line(df, col_name, method, figname):
-    # Initial Log File
+    # Create folder
     fig_path = os.path.join(FLAGS.IMG_PATH)
     if not os.path.exists(fig_path):
         os.mkdir(fig_path)
