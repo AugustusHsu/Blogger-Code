@@ -17,6 +17,7 @@ from tensorflow.keras.layers import (
     Input,
     Conv2DTranspose,
     Reshape,
+    Dropout,
 )
 from absl.flags import FLAGS
 
@@ -34,16 +35,20 @@ def Dis_Net(ImageSize, Channel):
     x = Conv2D(256, (4, 4), strides=(2, 2), padding='same')(x)
     x = BatchNormalization()(x)
     x = LeakyReLU()(x)
+    x = Dropout(0.3)(x)
     
     x = Conv2D(512, (4, 4), strides=(2, 2), padding='same')(x)
     x = BatchNormalization()(x)
     x = LeakyReLU()(x)
+    x = Dropout(0.3)(x)
     
     x = Conv2D(1024, (4, 4), strides=(2, 2), padding='same')(x)
     x = BatchNormalization()(x)
     x = LeakyReLU()(x)
+    x = Dropout(0.3)(x)
     
     x = Conv2D(1, (4, 4), strides=(1, 1), padding='valid')(x)
+    x = Dropout(0.3)(x)
     
     x = Flatten()(x)
     x = Dense(1)(x)
@@ -62,9 +67,6 @@ def Gen_Net(Channel):
     
     x = inputs_x = Input([FLAGS.noise_dim])
     x = Reshape((1, 1, FLAGS.noise_dim))(x)
-    
-    x = inputs_x = Input([100])
-    x = Reshape((1, 1, 100))(x)
     
     x = Conv2DTranspose(1024, (4, 4), strides=(1, 1), padding='valid')(x)
     x = BatchNormalization()(x)

@@ -21,10 +21,10 @@ IMAGE_FEATURE_MAP = {
     'image/img_celeba/encoded': tf.io.FixedLenFeature([], tf.string),
     'image/img_align_celeba/encoded': tf.io.FixedLenFeature([], tf.string),
     'image/img_align_celeba_png/encoded': tf.io.FixedLenFeature([], tf.string),
-    'image/ID': tf.io.FixedLenFeature([1], tf.int64),
-    'image/Attr': tf.io.FixedLenFeature([40], tf.float32),
-    'image/Landmarks': tf.io.FixedLenFeature([10], tf.float32),
-    'image/LandmarksAlign': tf.io.FixedLenFeature([10], tf.float32),
+    # 'image/ID': tf.io.FixedLenFeature([1], tf.int64),
+    # 'image/Attr': tf.io.FixedLenFeature([40], tf.float32),
+    # 'image/Landmarks': tf.io.FixedLenFeature([10], tf.float32),
+    # 'image/LandmarksAlign': tf.io.FixedLenFeature([10], tf.float32),
     'image/img_celeba/bbox': tf.io.FixedLenFeature([4], tf.float32),
 }
 
