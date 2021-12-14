@@ -4,7 +4,7 @@
 
 ## Objective Function
 
-![Objective Function](https://drive.google.com/uc?export=view&id=1I8GYkmIBozUw2UuH7-wYNyQl0AhTJX5S)
+![Objective Function](https://drive.google.com/uc?export=view&id=1mjUiE0ySRkJCsutPlrRzy4vZ-Wz1M4Pg)
 
 ## Learning Curve
 
